@@ -1,0 +1,18 @@
+#The delay in minutes between each regeneration task
+regen-delay: 1
+
+#The number of seconds to notify players before regeneration
+warning-delay: 10
+#Message to display before regeneration
+regen-message: "&0[&4Server&0]&f: Starting world restoration in <delay> seconds."
+regen-done-message: "&0[&4Server&0]&f: Regeneration done!"
+
+#-----------------------
+#GriefDefender options
+#-----------------------
+
+#This option will allow the plugin to not restore claims
+enable-griefdefender-support: true
+#Number of blocks around claims that are not regenerated, set to 0 to disable
+claim-settings:
+    claim-padding: 10

@@ -10,20 +10,16 @@ import com.griefdefender.GriefDefenderPlugin;
 import com.griefdefender.api.claim.Claim;
 import com.griefdefender.claim.GDClaimManager;
 
-import as.minecraft.worldrestoration.WorldRestoration;
+import as.minecraft.worldrestoration.data.DataStore;
 
 public class ClaimHandler{
 	
-	WorldRestoration plugin;
 	private World world;
 	private int padding;
 	
-	public ClaimHandler(WorldRestoration plugin, World world) {
-		this.plugin = plugin;
+	public ClaimHandler(World world) {
 		this.world = world;
-		//this.padding = plugin.getConfig().getInt("claim-padding");
-		//Find some way to do this ^ within the thread, perhaps store that variable
-		this.padding = 5; //Set the padding manually for now
+		this.padding = DataStore.getInt("claim-settings.claim-padding");
 	}
 	public ArrayList<Vector3i[]> getClaimBounds(){
 		GDClaimManager claimManager = GriefDefenderPlugin.getInstance().dataStore.getClaimWorldManager(world.getUID());

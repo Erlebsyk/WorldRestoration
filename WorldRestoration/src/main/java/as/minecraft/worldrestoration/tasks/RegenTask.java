@@ -6,6 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import as.minecraft.worldrestoration.WorldRestoration;
+import as.minecraft.worldrestoration.data.DataStore;
 import as.minecraft.worldrestoration.utils.Utils;
 
 public class RegenTask extends BukkitRunnable{

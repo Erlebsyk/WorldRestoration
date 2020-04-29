@@ -19,7 +19,7 @@ public class PerformRegen implements Runnable{
 		
 		//Test code to get and display coords of claim list
 		World world = Bukkit.getWorld("world");
-		ClaimHandler claimHandler = new ClaimHandler(plugin, world);
+		ClaimHandler claimHandler = new ClaimHandler(world);
 		ArrayList<Vector3i[]> claimBounds = claimHandler.getClaimBounds();
 		
 		for(Vector3i[] vec: claimBounds) {
