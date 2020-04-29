@@ -1,12 +1,10 @@
 package as.minecraft.worldrestoration.dependencies;
 
 /* For additional lookup after rollback:
-
-
-import net.coreprotect.CoreProtectAPI.ParseResult;
-*/
 import java.util.List;
 import java.util.Arrays;
+import net.coreprotect.CoreProtectAPI.ParseResult;
+*/
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,8 +16,6 @@ import net.coreprotect.CoreProtectAPI;
 
 public class CoreProtectRollback{
 	//Method to fetch CoreProtect
-	
-	
 	
 	private CoreProtectAPI getCoreProtect() {
         Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
@@ -67,7 +63,7 @@ public class CoreProtectRollback{
 	      }
 	    }
 	    catch (Exception e){
-	    	Bukkit.broadcastMessage("Error");
+	    	System.out.println("Error: Could not perform rollback: \n" + e);
 	    	e.printStackTrace(); 
 	    }
 	  }
