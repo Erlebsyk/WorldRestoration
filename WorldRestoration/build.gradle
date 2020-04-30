@@ -36,6 +36,10 @@ repositories {
     	name = 'jitpack'
     	url = 'https://jitpack.io'
     }
+    maven {
+	name = "worldedit-bukkit"
+	url="http://maven.sk89q.com/repo"
+    }
     
     flatDir {
         dirs 'lib'
