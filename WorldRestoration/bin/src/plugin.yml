@@ -1,8 +1,0 @@
-name: WorldRestoration
-version: 1.0
-api-version: 1.15
-author: Erlend Isachsen
-main: as.minecraft.worldrestoration.WorldRestoration
-description: A plugin that regenerates the nature using the CoreProtect API.
-depend: [CoreProtect]
-softDepend: [GriefDefender v1.2.5]
