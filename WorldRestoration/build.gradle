@@ -53,7 +53,7 @@ dependencies {
     //implementation 'com.google.guava:guava:27.0.1-jre'
 
     // Use JUnit test framework
-    //testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
     compileOnly 'com.flowpowered:flow-math:1.0.3'
