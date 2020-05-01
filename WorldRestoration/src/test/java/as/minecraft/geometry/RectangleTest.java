@@ -525,18 +525,23 @@ public class RectangleTest {
 	
 	@Test
 	public void subtractionRandomRuns() {
-		Random random = new Random(12345);
+		RandomPointGenerator random = new RandomPointGenerator(12345);
+		Point minPoint = new Point(-5000, -5000);
+		Point maxPoint = new Point(5000, 5000);
 		for(int i=0; i<100; i++) {
-			Rectangle baseRectangle = new Rectangle(new Point(random.nextInt(10000) - 5000, -12), new Point(6, 12));
-			Rectangle subtractionRectangle = new Rectangle(new Point(1, -12), new Point(6, 12));
-			Rectangle overlapRectangle = new Rectangle(new Point(1, -12), new Point(6, 12));
+			Point baseRectangleMin = random.randomPoint(minPoint, maxPoint);
+			Point baseRectangleMax = random.randomPoint(baseRectangleMin, maxPoint);
+			Rectangle baseRectangle = new Rectangle(baseRectangleMin, baseRectangleMax);
+			
+			Point subtractionRectangleMin = random.randomPoint(minPoint, maxPoint);
+			Point subtractionRectangleMax = random.randomPoint(subtractionRectangleMin, maxPoint);
+			Rectangle subtractionRectangle = new Rectangle(subtractionRectangleMin, subtractionRectangleMax);
+			
+			List<Rectangle> newRects = baseRectangle.subtractRectangle(subtractionRectangle);
+			
+			assertInside(newRects, baseRectangle);
+			assertNoOverlap(newRects);
 		}
-		
-		Rectangle baseRectangle = new Rectangle(new Point(1, -12), new Point(6, 12));
-		Rectangle subtractionRectangle = new Rectangle(new Point(1, -12), new Point(6, 12));
-		Rectangle overlapRectangle = new Rectangle(new Point(1, -12), new Point(6, 12));
-		
-		subtractionTestBase(baseRectangle, subtractionRectangle, overlapRectangle);
 	}
 
 	
@@ -589,16 +594,14 @@ public class RectangleTest {
 	
 	@Test
 	public void convertManyRectanglesToSquare() {
-		Random random = new Random(1234);
+		RandomPointGenerator random = new RandomPointGenerator(1234);
+		Point minPoint = new Point(-5000, -5000);
+		Point maxPoint = new Point(5000, 5000);
 		for(int i=0; i<100; i++) {
-			Point minPoint = new Point(
-					random.nextInt(10000) - 5000,
-					random.nextInt(10000) - 5000);
-			Point maxPoint = new Point(
-					minPoint.x + random.nextInt(5000) + 1,
-					minPoint.y + random.nextInt(5000) + 1);
+			Point minCorner = random.randomPoint(minPoint, maxPoint);
+			Point maxCorner = random.randomPoint(minCorner, maxPoint);
 			
-			Rectangle baseRectangle = new Rectangle(minPoint, maxPoint);
+			Rectangle baseRectangle = new Rectangle(minCorner, maxCorner);
 			squareConversionTestBase(baseRectangle);
 		}
 	}
