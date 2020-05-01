@@ -180,6 +180,32 @@ public class Rectangle {
 		return returnList;
 	}
 	
+	public List<Rectangle> subtractRectangles(List<Rectangle> subtractionRectangles) {
+		ArrayList<Rectangle> subtractedRectangles = new ArrayList<>();
+		LinkedList<Rectangle> rectanglesToSubtractFrom = new LinkedList<>();
+		rectanglesToSubtractFrom.add(this);
+		
+		while(!rectanglesToSubtractFrom.isEmpty()) {
+			Rectangle currentRectangle = rectanglesToSubtractFrom.pop();
+			boolean wasSubtracted = false;
+			
+			for(Rectangle subtractionRectangle : subtractionRectangles) {
+				List<Rectangle> newRectangles = currentRectangle.subtractRectangle(subtractionRectangle);
+				if(newRectangles.size() == 0 || (newRectangles.size() >= 1 && newRectangles.get(0).area() != currentRectangle.area())) {
+					rectanglesToSubtractFrom.addAll(newRectangles);
+					wasSubtracted = true;
+					break;
+				}
+			}
+			
+			if(!wasSubtracted) {
+				subtractedRectangles.add(currentRectangle);
+			}
+		}
+		
+		return subtractedRectangles;
+	}
+	
 	public int area() {
 		return width() * height();
 	}
