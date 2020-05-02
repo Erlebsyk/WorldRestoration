@@ -20,7 +20,7 @@ public class PerformRegen implements Runnable{
 		//Test code to get and display coords of claim list
 		World world = Bukkit.getWorld("world");
 		ClaimHandler claimHandler = new ClaimHandler(world);
-		ArrayList<Vector3i[]> claimBounds = claimHandler.getClaimBounds();
+		ArrayList<Vector3i[]> claimBounds = claimHandler.getWorldClaimBounds();
 		
 		for(Vector3i[] vec: claimBounds) {
 			Bukkit.broadcastMessage("Lesser Bound - X: " + Integer.toString(vec[0].getX()) + ", Z: " + Integer.toString(vec[0].getZ()));
