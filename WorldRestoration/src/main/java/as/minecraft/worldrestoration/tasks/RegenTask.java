@@ -41,6 +41,7 @@ public class RegenTask extends BukkitRunnable{
 						
 					}
 				};
+				//Check if the task is done every 5 second
 				regenChecker.runTaskTimerAsynchronously(plugin, 20L*5, 20L*5);
 			}
 			
