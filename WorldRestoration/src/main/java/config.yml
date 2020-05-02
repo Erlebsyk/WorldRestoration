@@ -1,8 +1,9 @@
-#The delay in minutes between each regeneration task
-regen-delay: 1
+#Allowed time units are seconds, minutes, hours, days (and s, m, h, d). No unit will assume seconds
+#The delay in between each regeneration task
+regen-delay: 1m
 
-#The number of seconds to notify players before regeneration
-warning-delay: 10
+#Time to notify players before regeneration, 
+warning-delay: 10s
 #Message to display before regeneration
 regen-message: "&0[&4Server&0]&f: Starting world restoration in <delay> seconds."
 regen-done-message: "&0[&4Server&0]&f: Regeneration done!"

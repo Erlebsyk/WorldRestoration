@@ -18,8 +18,7 @@ public class RegenTask extends BukkitRunnable{
 	
 	@Override
 	public void run() {
-		Bukkit.broadcastMessage(Utils.chat(plugin.getConfig().getString("regen-message").replace("<delay>", Integer.toString(plugin.getConfig().getInt("warning-delay")))));
-		//BukkitTask performRegen = new PerformRegen(plugin).runTaskLater(plugin, plugin.getConfig().getInt("warning-delay")*20L);
+		Bukkit.broadcastMessage(Utils.chat(plugin.getConfig().getString("regen-message").replace("<delay>", plugin.getConfig().getString("warning-delay").replaceAll("(\\d+).+", "$1"))));
 		
 		//Run regeneration in new thread for better performance
 		Runnable performRegen = new PerformRegen();
@@ -45,7 +44,7 @@ public class RegenTask extends BukkitRunnable{
 				regenChecker.runTaskTimerAsynchronously(plugin, 20L*5, 20L*5);
 			}
 			
-		}, plugin.getConfig().getInt("warning-delay")*20L);
+		}, Utils.getTicksFromTimeUnit(plugin.getConfig().getString("warning-delay")));
 	}
 }
 
