@@ -30,10 +30,6 @@ repositories {
         url = 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     maven {
-        name = 'griefdefender'
-        url = 'https://repo.glaremasters.me/repository/bloodshot'
-    }
-    maven {
     	name = 'jitpack'
     	url = 'https://jitpack.io'
     }
@@ -63,9 +59,11 @@ dependencies {
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
     compileOnly 'com.flowpowered:flow-math:1.0.3'
     compileOnly 'net.coreprotect:coreprotect:2.18.2'
+    
     compileOnly 'com.github.jitpack:gradle-simple:master-SNAPSHOT'
     compileOnly 'com.github.bloodmc:GriefDefenderAPI:master-SNAPSHOT'
-    compileOnly fileTree(include: ['*.jar'], dir: 'lib')
+
+    //compileOnly fileTree(include: ['*.jar'], dir: 'lib')
     //implementation 'com.github.bloodmc.GriefDefender:bukkit:master-SNAPSHOT'
     
 }

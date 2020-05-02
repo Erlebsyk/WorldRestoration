@@ -6,9 +6,9 @@ import java.util.Set;
 import org.bukkit.World;
 
 import com.flowpowered.math.vector.Vector3i;
-import com.griefdefender.GriefDefenderPlugin;
+import com.griefdefender.api.GriefDefender;
 import com.griefdefender.api.claim.Claim;
-import com.griefdefender.claim.GDClaimManager;
+import com.griefdefender.api.claim.ClaimManager;
 
 import as.minecraft.worldrestoration.data.DataStore;
 
@@ -22,7 +22,7 @@ public class ClaimHandler{
 		this.padding = DataStore.getInt("claim-settings.claim-padding");
 	}
 	public ArrayList<Vector3i[]> getClaimBounds(){
-		GDClaimManager claimManager = GriefDefenderPlugin.getInstance().dataStore.getClaimWorldManager(world.getUID());
+		ClaimManager claimManager = GriefDefender.getCore().getClaimManager(world.getUID());
 		Set<Claim> allClaims = claimManager.getWorldClaims();
 		
 		ArrayList<Vector3i[]> result = new ArrayList<Vector3i[]>();
