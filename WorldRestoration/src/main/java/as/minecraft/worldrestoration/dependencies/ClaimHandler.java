@@ -1,6 +1,7 @@
 package as.minecraft.worldrestoration.dependencies;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.World;
@@ -10,6 +11,8 @@ import com.griefdefender.api.GriefDefender;
 import com.griefdefender.api.claim.Claim;
 import com.griefdefender.api.claim.ClaimManager;
 
+import as.minecraft.geometry.Point;
+import as.minecraft.geometry.Rectangle;
 import as.minecraft.worldrestoration.data.DataStore;
 
 public class ClaimHandler{
@@ -21,9 +24,15 @@ public class ClaimHandler{
 		this.world = world;
 		this.padding = DataStore.getInt("claim-settings.claim-padding");
 	}
-	public ArrayList<Vector3i[]> getClaimBounds(){
+	
+	public Set<Claim> getWorldClaims(){
 		ClaimManager claimManager = GriefDefender.getCore().getClaimManager(world.getUID());
-		Set<Claim> allClaims = claimManager.getWorldClaims();
+		return claimManager.getWorldClaims();
+		
+	}
+	
+	public ArrayList<Vector3i[]> getWorldClaimBounds(){
+		Set<Claim> allClaims = this.getWorldClaims();
 		
 		ArrayList<Vector3i[]> result = new ArrayList<Vector3i[]>();
 		
@@ -39,5 +48,21 @@ public class ClaimHandler{
 			}
 		}
 		return result;
+	}
+	
+	public List<Rectangle> getWorldClaimRectangles(){
+		ArrayList<Rectangle> worldRectangles = new ArrayList<Rectangle>();
+		ArrayList<Vector3i[]> claimBounds = this.getWorldClaimBounds();
+		for(Vector3i[] vec: claimBounds) {
+			
+			worldRectangles.add(this.vectorToRectangle(vec));
+		}
+		return worldRectangles;
+	}
+	
+	public Rectangle vectorToRectangle(Vector3i[] vec) {
+		Point lesserBound = new Point(vec[0].getX(), vec[0].getZ());
+		Point greaterBound = new Point(vec[1].getX(), vec[1].getZ());
+		return new Rectangle(lesserBound, greaterBound);
 	}
 }
