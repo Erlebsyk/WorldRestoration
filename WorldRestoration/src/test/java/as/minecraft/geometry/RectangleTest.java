@@ -1,20 +1,19 @@
 package as.minecraft.geometry;
 
+import static as.minecraft.geometry.RectangleTestUtils.assertAreaEquals;
+import static as.minecraft.geometry.RectangleTestUtils.assertInside;
+import static as.minecraft.geometry.RectangleTestUtils.assertInsideSquares;
+import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlap;
+import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlapSquares;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
-
-import static as.minecraft.geometry.RectangleTestUtils.assertAreaEquals;
-import static as.minecraft.geometry.RectangleTestUtils.assertInside;
-import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlap;
-import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlapSquares;
-import static as.minecraft.geometry.RectangleTestUtils.assertInsideSquares;
 
 public class RectangleTest {
 	@Rule public TestName name = new TestName();
@@ -624,5 +623,83 @@ public class RectangleTest {
 		assertInsideSquares(squares, rectangle);
 		assertNoOverlapSquares(squares);
 		assertAreaEquals(rectangle, squares);
+	}
+	
+	@Test
+	public void subtractRectanglesNoneOverlapping() {
+		Rectangle baseRectangle = new Rectangle(new Point(-5, -5), new Point(0, -2));
+		List<Rectangle> subtractionRectangles = Arrays.asList(
+				new Rectangle(new Point(0, 0), new Point(5, 3)),
+				new Rectangle(new Point(3, 3), new Point(6, 6)),
+				new Rectangle(new Point(-10, -5), new Point(-5, -2)));
+		List<Rectangle> overlapRegion = Arrays.asList();
+		
+		subtractRectanglesBaseTest(baseRectangle, subtractionRectangles, overlapRegion);
+	}
+	
+	@Test
+	public void subtractRectanglesFullyOverlapping() {
+		Rectangle baseRectangle = new Rectangle(new Point(-5, -5), new Point(0, -2));
+		List<Rectangle> subtractionRectangles = Arrays.asList(
+				new Rectangle(new Point(-8, -5), new Point(-3, -2)),
+				new Rectangle(new Point(-4, -4), new Point(0, -1)),
+				new Rectangle(new Point(-4, -7), new Point(1, -4)));
+		List<Rectangle> overlapRegion = Arrays.asList(
+				new Rectangle(new Point(-5, -5), new Point(0, -2)));
+		
+		subtractRectanglesBaseTest(baseRectangle, subtractionRectangles, overlapRegion);
+	}
+	
+	@Test
+	public void subtractRectanglesPartiallyOverlapping() {
+		Rectangle baseRectangle = new Rectangle(new Point(-5, -5), new Point(0, -2));
+		List<Rectangle> subtractionRectangles = Arrays.asList(
+				new Rectangle(new Point(-8, -5), new Point(-3, -2)),
+				new Rectangle(new Point(-2, -3), new Point(2, 0)),
+				new Rectangle(new Point(-4, -7), new Point(1, -4)));
+		List<Rectangle> overlapRegion = Arrays.asList(
+				new Rectangle(new Point(-5, -5), new Point(-3, -2)),
+				new Rectangle(new Point(-3, -5), new Point(0, -4)),
+				new Rectangle(new Point(-2, -3), new Point(0, -2)));
+		
+		subtractRectanglesBaseTest(baseRectangle, subtractionRectangles, overlapRegion);
+	}
+	
+	@Test
+	public void subtractRectanglesAllInside() {
+		Rectangle baseRectangle = new Rectangle(new Point(-1000, -500), new Point(300, 20));
+		List<Rectangle> subtractionRectangles = Arrays.asList(
+				new Rectangle(new Point(-8, -5), new Point(-3, -2)),
+				new Rectangle(new Point(-2, -3), new Point(2, 0)),
+				new Rectangle(new Point(-4, -7), new Point(1, -4)));
+		// Two of the subtraction rectangles are overlapping, so the
+		// overlap region is not identical to subtraction rectangles
+		List<Rectangle> overlapRegion = Arrays.asList(
+				new Rectangle(new Point(-8, -5), new Point(-4, -2)),
+				new Rectangle(new Point(-2, -3), new Point(2, 0)),
+				new Rectangle(new Point(-4, -7), new Point(1, -4)),
+				new Rectangle(new Point(-4, -4), new Point(-3, -2)));
+		
+		subtractRectanglesBaseTest(baseRectangle, subtractionRectangles, overlapRegion);
+	}
+	
+	@Test
+	public void subtractRectanglesEmptySubtractionList() {
+		Rectangle baseRectangle = new Rectangle(new Point(-5, -5), new Point(0, -2));
+		List<Rectangle> subtractionRectangles = Arrays.asList();
+		List<Rectangle> overlapRegion = Arrays.asList();
+		
+		subtractRectanglesBaseTest(baseRectangle, subtractionRectangles, overlapRegion);
+	}
+	
+	private void subtractRectanglesBaseTest(
+			Rectangle baseRectangle,
+			List<Rectangle> subtractionRectangles,
+			List<Rectangle> overlapRegions) {
+		List<Rectangle> newRects = baseRectangle.subtractRectangles(subtractionRectangles);
+		
+		assertInside(newRects, baseRectangle);
+		assertNoOverlap(newRects);
+		assertAreaEquals(baseRectangle, newRects, overlapRegions);
 	}
 }

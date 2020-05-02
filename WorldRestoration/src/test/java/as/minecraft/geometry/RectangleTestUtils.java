@@ -94,4 +94,22 @@ public class RectangleTestUtils {
 		
 		assertEquals(areaSum, baseRect.area());
 	}
+	
+
+	public static void assertAreaEquals(
+			Rectangle baseRectangle,
+			List<Rectangle> newRects,
+			List<Rectangle> overlapRegions) {
+		int areaSum = 0;
+		for (Rectangle rectangle : newRects) {
+			areaSum += rectangle.area();
+		}
+		
+		int subtractionArea = 0;
+		for(Rectangle rectangle : overlapRegions) {
+			subtractionArea += rectangle.area();
+		}
+		
+		assertEquals(areaSum, baseRectangle.area() - subtractionArea);
+	}
 }
