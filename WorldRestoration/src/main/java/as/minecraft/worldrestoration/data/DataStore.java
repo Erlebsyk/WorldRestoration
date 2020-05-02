@@ -3,7 +3,11 @@
 package as.minecraft.worldrestoration.data;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 
 import as.minecraft.worldrestoration.WorldRestoration;
 
@@ -11,11 +15,13 @@ public class DataStore {
 	private static Set<String> keys;
 	private static HashMap<String, String> configStrings;
 	private static HashMap<String, Integer> configInts;
+	private static Set<String> worldNames;
 	
 	public DataStore(WorldRestoration plugin) {
 		DataStore.keys = plugin.getConfig().getKeys(true);
 		DataStore.configStrings = new HashMap<String, String>();
 		DataStore.configInts = new HashMap<String, Integer>();
+		DataStore.worldNames = new HashSet<String>();
 		
 		for(String k: keys) {
 			String entry = plugin.getConfig().getString(k);
@@ -24,6 +30,15 @@ public class DataStore {
 		        DataStore.configInts.put(k, num);
 		    } catch (NumberFormatException nfe) {
 		    	DataStore.configStrings.put(k, entry);
+		    	
+		    	//Store world names separately
+		    	if(k.contains("world-settings.") && StringUtils.countMatches(k, ".") == 1) {
+		    		String worldName = k.replace("world-settings.", "");
+		    		if(Bukkit.getWorld(worldName) != null)
+		    			worldNames.add(worldName);
+		    		else
+		    			Bukkit.getLogger().warning("[World Restoration] World with name: \"" + worldName + "\" is not found, and will not be restored!");
+		    	}
 		    }
 		}
 	}
@@ -39,4 +54,7 @@ public class DataStore {
 		return DataStore.configInts.get(key);
 	}
 	
+	public static Set<String> getWorldNames(){
+		return DataStore.worldNames;
+	}
 }

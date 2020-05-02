@@ -157,7 +157,7 @@ public class Rectangle {
 		return false;
 	}
 
-	List<Square> convertToSquares() {
+	public List<Square> convertToSquares() {
 		if(width() == 0 || height() == 0) {
 			throw new IllegalStateException("Cannot convert rectangle with width or height equal to zero");
 		}

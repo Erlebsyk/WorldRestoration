@@ -5,4 +5,4 @@ author: Linoko
 main: as.minecraft.worldrestoration.WorldRestoration
 description: A plugin that regenerates the nature using CoreProtect.
 depend: [CoreProtect]
-softDepend: [GriefDefender]
+softdepend: [GriefDefender]
