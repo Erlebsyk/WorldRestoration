@@ -16,12 +16,14 @@ public class DataStore {
 	private static HashMap<String, String> configStrings;
 	private static HashMap<String, Integer> configInts;
 	private static Set<String> worldNames;
+	private static boolean running;
 	
 	public DataStore(WorldRestoration plugin) {
 		DataStore.keys = plugin.getConfig().getKeys(true);
 		DataStore.configStrings = new HashMap<String, String>();
 		DataStore.configInts = new HashMap<String, Integer>();
 		DataStore.worldNames = new HashSet<String>();
+		DataStore.running = false;
 		
 		for(String k: keys) {
 			String entry = plugin.getConfig().getString(k);
@@ -56,5 +58,14 @@ public class DataStore {
 	
 	public static Set<String> getWorldNames(){
 		return DataStore.worldNames;
+	}
+	public static boolean isRunning() {
+		return DataStore.running;
+	}
+	public static void startRunning() {
+		DataStore.running = true;
+	}
+	public static void stopRunning() {
+		DataStore.running = false;
 	}
 }

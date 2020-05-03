@@ -101,6 +101,9 @@ public class PerformRegen implements Runnable{
 	private void performRestoration(int oldTime, Square square, int radius, Location centre) {
 		CoreProtectHook.coreProtect.performRollback(2147483600, null, null, null, null /*exclude-blocks*/, null /*actions*/, radius, centre);
 		CoreProtectHook.coreProtect.performRestore(oldTime, null, null, null, null /*exclude-blocks*/, null /*actions*/, radius, centre);
+		
+		//Re-update database as a temprary fix for blocks not getting their "rollbacked"-state updated after first restoration
+		CoreProtectHook.coreProtect.performRestore(oldTime, null, null, null, null /*exclude-blocks*/, null /*actions*/, radius, centre);
 	}
 	
 }
