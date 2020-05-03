@@ -29,10 +29,11 @@ public class PerformRegen implements Runnable{
 			if(DataStore.getString("world-settings." + worldName + ".regen-enabled").trim().equals("true")) {
 				World world = Bukkit.getWorld(worldName);
 				int oldTime = Utils.getSecondsFromTimeUnit(DataStore.getString("world-settings." + worldName + ".considered-old-after").trim());
+				int restoreRadius = DataStore.getInt("world-settings." + worldName + ".radius");
 				ClaimHandler claimHandler = new ClaimHandler(world);
 				List<Rectangle> claimRectangles = claimHandler.getWorldClaimRectangles();
 				
-				Rectangle worldRectangle = new Rectangle(new Point(800, 800), new Point(1200, 1200));
+				Rectangle worldRectangle = new Rectangle(new Point(-restoreRadius, -restoreRadius), new Point(restoreRadius, restoreRadius));
 				List<Rectangle> rollbackRectangles = worldRectangle.subtractRectangles(claimRectangles);
 				
 				for(Rectangle rectangle: rollbackRectangles) {
@@ -51,37 +52,6 @@ public class PerformRegen implements Runnable{
 				}
 			}
 		}
-		
-		//TESTS!:
-		
-		//System.out.println("_____________Claims:________________");
-		//for(Rectangle claimRect: claimRectangles) {
-		//	System.out.println("min: " + claimRect.minCoordinate.x + ", " + claimRect.minCoordinate.y + ", max: " + claimRect.maxCoordinate.x + ", " + claimRect.maxCoordinate.y);
-		//}
-		
-		//Single lookup in the whole area (800, 800 to 1200, 1200)
-		//
-		//List<String[]> looked = CoreProtectHook.coreProtect.performLookup(60*3/*2147483647*/, named, null, null, null /*exclude-blocks*/, null /*actions*/, 200, new Location(world, 1000, 62, 1000));
-		//System.out.println("All results: " + looked.toString());
-		//System.out.println("_____________________________");
-		
-		//System.out.println("In sqare: (" + square.minPoint.x + ", " + square.minPoint.y + ") - (" + (square.minPoint.x + square.size) + ", " + (square.minPoint.y + square.size) + ")");
-		
-		//System.out.println("Block: " + result.getType().toString() + " changed " + (result.getTime() - (int) (System.currentTimeMillis() / 1000L)) + " seconds ago.");
-		
-		//System.out.println("x: "+ result.getX() + ", y: " +  result.getY() + ", z: " + result.getZ() + ". Time: " + result.getTime() + " | Data: [" + result.getPlayer() +", r:" + lookupRadius + ", sqSize:" + square.size + ", " + result.getActionString() + ", " + world.getName() + "]");
-		//System.out.println("_______________________________________________________");
-		//---------------------------------
-		
-		
-				
-		//Lookup across all rectangles within WorldRectangle, after subtracting claimRectangles
-		/*
-		//Regen test task at block 1000 1000
-		CoreProtectRollback runnable = new CoreProtectRollback();
-		runnable.run(new double[] {1000, 72, 1000}, 20);
-		//
-		*/
 	}
 	
 	private boolean checkListForOldEntry(int oldTime, List<String[]> lookup) {

@@ -1,6 +1,6 @@
 #Allowed time units are seconds, minutes, hours, days (and s, m, h, d). No unit will assume seconds
 #The delay in between each regeneration task
-regen-delay: 1m
+regen-delay: 1h
 
 #Time to notify players before regeneration, 
 warning-delay: 10s
@@ -14,20 +14,26 @@ world-settings:
         regen-enabled: true
         #After how long are blocks considered old and should be restored?
         considered-old-after: 14d
+        #How many blocks out from spawn (0,0,0) should be restored?
+        #For better performance, this setting should not be set larger than the world radius
+        radius: 1000
         #Should claims be protected from restoration? If set to false, claims will be regenerated!
         #This setting is ignored if none of the supported protection plugins are enabled
         respect-claims: true
     world_nether:
         regen-enabled: true
         considered-old-after: 14d
+        radius: 1000
         respect-claims: true
     world_the_end:
         regen-enabled: true
         considered-old-after: 14d
+        radius: 1000
         respect-claims: true
     world_the_test:
         regen-enabled: true
         considered-old-after: 14d
+        radius: 1000
         respect-claims: true
 
 #-----------------------
