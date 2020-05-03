@@ -12,10 +12,6 @@ public class Square {
 		return size * size;
 	}
 	
-	public Point centre() {
-		return new Point(minPoint.x + size/2, minPoint.y + size/2);
-	}
-	
 	Rectangle toRectangle() {
 		return new Rectangle(
 				new Point(this.minPoint.x, this.minPoint.y),
