@@ -23,10 +23,11 @@ public class PerformRegen implements Runnable{
 	@Override
 	public void run() {
 		
-		//Test code to get and display coords of claim list
 		Set<String> worldNames = DataStore.getWorldNames();
 		for(String worldName: worldNames) {
-			if(DataStore.getString("world-settings." + worldName + ".regen-enabled").trim().equals("true")) {
+			String worldRegenEnabledProperty = DataStore.getString("world-settings." + worldName + ".regen-enabled").trim();
+			boolean regenEnabledForWorld = worldRegenEnabledProperty.equals("true");
+			if(regenEnabledForWorld) {
 				World world = Bukkit.getWorld(worldName);
 				int oldTime = Utils.getSecondsFromTimeUnit(DataStore.getString("world-settings." + worldName + ".considered-old-after").trim());
 				int restoreRadius = DataStore.getInt("world-settings." + worldName + ".radius");
@@ -44,9 +45,10 @@ public class PerformRegen implements Runnable{
 						int squareRadius = (int) (Math.ceil((double)(square.size) / 2.0));
 						if(square.size % 2 == 0) squareRadius += 1;
 						
-						List<String[]> lookup = CoreProtectHook.coreProtect.performLookup(2147483600, null, null, null, null /*exclude-blocks*/, null /*actions*/, squareRadius, squareCentre);
+						int lookupTime = Integer.MAX_VALUE;
+						List<String[]> lookup = CoreProtectHook.coreProtect.performLookup(lookupTime, null /*restrict_users*/, null /*exclude_users*/, null /*restrict_blocks*/, null /*exclude-blocks*/, null /*actions*/, squareRadius, squareCentre);
 						if(checkListForOldEntry(oldTime, lookup)) {
-							performRestoration(oldTime, square, squareRadius, squareCentre);
+							performRestoration(oldTime, squareRadius, squareCentre);
 						}
 					}
 				}
@@ -56,11 +58,10 @@ public class PerformRegen implements Runnable{
 	
 	private boolean checkListForOldEntry(int oldTime, List<String[]> lookup) {
 		if (lookup!=null && !lookup.isEmpty()) {
-			int currentTime = (int)(System.currentTimeMillis() / 1000L);
+			int currentTimeSeconds = (int)(System.currentTimeMillis() / 1000L);
 			for(String[] entry: lookup) {
 				ParseResult result = CoreProtectHook.coreProtect.parseResult(entry);
-				//System.out.println("Time ago: " + (currentTime - result.getTime()) + ", rolled back: " + result.isRolledBack());
-				if(currentTime - result.getTime() > oldTime && !result.isRolledBack()) {
+				if(currentTimeSeconds - result.getTime() > oldTime && !result.isRolledBack()) {
 					return true;
 				}
 			}
@@ -68,12 +69,13 @@ public class PerformRegen implements Runnable{
 		return false;
 	}
 	
-	private void performRestoration(int oldTime, Square square, int radius, Location centre) {
-		CoreProtectHook.coreProtect.performRollback(2147483600, null, null, null, null /*exclude-blocks*/, null /*actions*/, radius, centre);
-		CoreProtectHook.coreProtect.performRestore(oldTime, null, null, null, null /*exclude-blocks*/, null /*actions*/, radius, centre);
+	private void performRestoration(int oldTime, int radius, Location centre) {
+		int rollbackTime = Integer.MAX_VALUE;
+		CoreProtectHook.coreProtect.performRollback(rollbackTime, null /*restrict_users*/, null /*exclude_users*/, null /*restrict_blocks*/, null /*exclude-blocks*/, null /*actions*/, radius, centre);
+		CoreProtectHook.coreProtect.performRestore(oldTime, null /*restrict_users*/, null /*exclude_users*/, null /*restrict_blocks*/, null /*exclude-blocks*/, null /*actions*/, radius, centre);
 		
-		//Re-update database as a temprary fix for blocks not getting their "rollbacked"-state updated after first restoration
-		CoreProtectHook.coreProtect.performRestore(oldTime, null, null, null, null /*exclude-blocks*/, null /*actions*/, radius, centre);
+		//Re-update database as a temporary fix for blocks not getting their "rollbacked"-state updated after first restoration
+		CoreProtectHook.coreProtect.performRestore(oldTime, null /*restrict_users*/, null /*exclude_users*/, null /*restrict_blocks*/, null /*exclude-blocks*/, null /*actions*/, radius, centre);
 	}
 	
 }

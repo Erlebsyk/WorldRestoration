@@ -25,7 +25,9 @@ public class RegenTask extends BukkitRunnable{
 			return;
 		}
 		
-		Bukkit.broadcastMessage(Utils.chat(plugin.getConfig().getString("regen-message").replace("<delay>", plugin.getConfig().getString("warning-delay").replaceAll("(\\d+).+", "$1"))));
+		String regenWarnMessage = plugin.getConfig().getString("regen-warn-message");
+		regenWarnMessage = regenWarnMessage.replace("<delay>", plugin.getConfig().getString("warning-delay").replaceAll("(\\d+).+", "$1"));
+		Bukkit.broadcastMessage(Utils.chat(regenWarnMessage));
 		
 		//Run regeneration in new thread for better performance
 		Runnable performRegen = new PerformRegen();

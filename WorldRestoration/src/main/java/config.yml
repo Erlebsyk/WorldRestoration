@@ -3,9 +3,9 @@
 regen-delay: 1h
 
 #Time to notify players before regeneration, 
-warning-delay: 10s
-#Message to display before regeneration
-regen-message: "&0[&4Server&0]&f: Starting world restoration in <delay> seconds."
+warning-delay: 60s
+#Message to display before and after regeneration
+regen-warn-message: "&0[&4Server&0]&f: Starting world restoration in <delay> seconds."
 regen-done-message: "&0[&4Server&0]&f: Regeneration done!"
 
 world-settings:

@@ -27,10 +27,18 @@ public class DataStore {
 		
 		for(String k: keys) {
 			String entry = plugin.getConfig().getString(k);
-			try {
-		        int num = Integer.parseInt(entry);
-		        DataStore.configInts.put(k, num);
-		    } catch (NumberFormatException nfe) {
+			//If entry is a valid integer, store it as an integer
+			if(entry.matches("\\d+")) {
+				try {
+					int num = Integer.parseInt(entry);
+					DataStore.configInts.put(k, num);
+				}
+				catch(NumberFormatException e) { //Entry is a positive number but not a valid int
+					Bukkit.getLogger().severe("Input: \"" + entry + "\" in config.yml at setting \"" + k + "\" is not a valid integer. Maximum allowed value is: 2 147 483 647.");
+					plugin.getPluginLoader().disablePlugin(plugin);
+				}
+		    } 
+			else{ //Store all non-integers as strings
 		    	DataStore.configStrings.put(k, entry);
 		    	
 		    	//Store world names separately
