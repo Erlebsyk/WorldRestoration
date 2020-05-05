@@ -32,7 +32,7 @@ public class RegenTask extends BukkitRunnable{
 		//Run regeneration in new thread for better performance
 		Runnable performRegen = new PerformRegen();
 		Thread performRegenThread = new Thread(performRegen);
-		BukkitScheduler regenScheduler = Bukkit.getServer().getScheduler();
+		BukkitScheduler regenScheduler = plugin.getServer().getScheduler();
 		regenScheduler.runTaskLater(plugin, new Runnable(){ //Wait <delay>@config.yml seconds before regeneration starts
 			@Override
 			public void run() {
