@@ -24,7 +24,7 @@ public class CoreProtectHook {
 	    Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
 	    // Check that CoreProtect is loaded
 	    if (plugin == null || !(plugin instanceof CoreProtect)) {
-	    	Bukkit.getLogger().severe("[WorldRestoration] Could not load CoreProtect, make sure that you have the latest version of CoreProtect installed!");
+	    	Bukkit.getLogger().severe("Could not load CoreProtect, make sure that you have the latest version of CoreProtect installed!");
 	    	this.plugin.getPluginLoader().disablePlugin(this.plugin);
 	    }
 

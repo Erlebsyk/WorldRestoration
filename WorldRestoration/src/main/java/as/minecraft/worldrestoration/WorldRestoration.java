@@ -12,20 +12,20 @@ public class WorldRestoration extends JavaPlugin{
 	
 	@Override
 	public void onEnable() {
-		getLogger().info("[WorldRestoration] Loading configuration...");
+		getLogger().info("Loading configuration...");
 		saveDefaultConfig();
 		new DataStore(this);
 		long regenDelay = Utils.getTicksFromTimeUnit(DataStore.getString("regen-delay"));
 		long waitBeforeStart = regenDelay;
 		
-		getLogger().info("[WorldRestoration] Hooking into CoreProtect...");
+		getLogger().info("Hooking into CoreProtect...");
 		new CoreProtectHook(this);
 		if(CoreProtectHook.coreProtect.isEnabled()) {
 			CoreProtectHook.coreProtect.testAPI();
-			getLogger().info("[WorldRestoration] Successfully hooked into CoreProtect.");
+			getLogger().info("Successfully hooked into CoreProtect.");
 		}
 		else {
-			getLogger().severe("[WorldRestoration] Could not load CoreProtect!");
+			getLogger().severe("Could not load CoreProtect!");
 			this.getPluginLoader().disablePlugin(this);
 		}
 			
@@ -34,7 +34,7 @@ public class WorldRestoration extends JavaPlugin{
 	}
 	@Override
 	public void onDisable() {
-		getLogger().info("[WorldRestoration] disabled.");
+		getLogger().info("Plugin disabled.");
 	}
 }
 

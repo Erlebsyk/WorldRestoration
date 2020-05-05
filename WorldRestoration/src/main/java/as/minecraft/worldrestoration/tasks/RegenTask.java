@@ -21,7 +21,7 @@ public class RegenTask extends BukkitRunnable{
 	public void run() {
 		
 		if(DataStore.isRunning()) {
-			Bukkit.getLogger().warning("[WorldRestoration] A restoration task was cancelled as there was already one running, consider increasing the regen-delay in config-yml.");
+			Bukkit.getLogger().warning("A restoration task was cancelled as there was already one running, consider increasing the regen-delay in config-yml.");
 			return;
 		}
 		

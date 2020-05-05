@@ -47,7 +47,7 @@ public class DataStore {
 		    		if(Bukkit.getWorld(worldName) != null)
 		    			worldNames.add(worldName);
 		    		else
-		    			Bukkit.getLogger().warning("[World Restoration] World with name: \"" + worldName + "\" is not found, and will not be restored!");
+		    			Bukkit.getLogger().warning("World with name: \"" + worldName + "\" is not found, and will not be restored!");
 		    	}
 		    }
 		}
