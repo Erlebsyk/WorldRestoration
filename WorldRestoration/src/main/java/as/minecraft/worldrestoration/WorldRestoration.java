@@ -1,8 +1,10 @@
 package as.minecraft.worldrestoration;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import as.minecraft.worldrestoration.data.ConfigHandler;
 import as.minecraft.worldrestoration.data.DataStore;
 import as.minecraft.worldrestoration.dependencies.CoreProtectHook;
 import as.minecraft.worldrestoration.tasks.RegenTask;
@@ -17,9 +19,10 @@ public class WorldRestoration extends JavaPlugin{
 		//----Setup-----
 		try {
 			getLogger().info("Loading configuration...");
-			DataStore dataStore = new DataStore(this);
-			dataStore.loadConfigFile();
-			dataStore.storeDataFromConfig();
+			ConfigHandler configHandler = new ConfigHandler(this);
+			FileConfiguration config = configHandler.getConfig();
+			new DataStore(this, config);
+			
 			long regenDelay = Utils.getTicksFromTimeUnit(DataStore.getString("regen-delay"));
 			long waitBeforeStart = regenDelay;
 		

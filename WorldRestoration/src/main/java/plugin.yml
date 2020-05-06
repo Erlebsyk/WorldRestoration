@@ -1,5 +1,5 @@
 name: WorldRestoration
-version: 1.0.1-ALPHA
+version: 1.0.1-alpha
 api-version: 1.15
 author: Linoko
 main: as.minecraft.worldrestoration.WorldRestoration
