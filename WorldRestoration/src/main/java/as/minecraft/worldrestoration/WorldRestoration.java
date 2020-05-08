@@ -21,6 +21,9 @@ public class WorldRestoration extends JavaPlugin{
 			getLogger().info("Loading configuration...");
 			ConfigHandler configHandler = new ConfigHandler(this);
 			FileConfiguration config = configHandler.getConfig();
+			
+			config = configHandler.getConfig();
+			
 			new DataStore(this, config);
 			
 			long regenDelay = Utils.getTicksFromTimeUnit(DataStore.getString("regen-delay"));
@@ -30,7 +33,6 @@ public class WorldRestoration extends JavaPlugin{
 			new CoreProtectHook(this);
 			if(CoreProtectHook.coreProtect.isEnabled()) {
 				CoreProtectHook.coreProtect.testAPI();
-				getLogger().info("Successfully hooked into CoreProtect.");
 			}
 			else {
 				getLogger().severe("Could not load CoreProtect!");
@@ -39,6 +41,7 @@ public class WorldRestoration extends JavaPlugin{
 			//------||------
 			
 			//Start main task
+			getLogger().info("Successfully enabled.");
 			new RegenTask(this).runTaskTimer(this, waitBeforeStart, regenDelay);
 		}
 		catch(RuntimeException e) {
