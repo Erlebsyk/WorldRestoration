@@ -1,13 +1,8 @@
 package as.minecraft.worldrestoration.data;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,7 +33,7 @@ public class ConfigHandler {
          }
 
         this.config = new YamlConfiguration();
-        try { 
+        try {
             this.config.load(configFile);
             
             String configVersion = this.config.getString("version");
@@ -56,148 +51,8 @@ public class ConfigHandler {
             }
             
             if(!configUpToDate) {
-            	int configVersionValue = getVersionValue(configVersion);
-            	int pluginVersionValue = getVersionValue(pluginVersion);
-            	if(pluginVersionValue > configVersionValue) {
-            		plugin.getLogger().warning("Config file outdated! A copy of the old is saved as \"config_backup.yml\", and a new one is created. "
-            				+ "The old settings will be imported, but make sure to review the new settings and verify that "
-            				+ "the old settings was imported correctly into the new \"config.yml\"!");
-            	}
-            	else if(pluginVersionValue < configVersionValue) {
-            		plugin.getLogger().warning("A config file for a newer version of the plugin was detected,"
-            				+ " if this is a mistake make sure to update the plugin to the latest version!"
-            				+ " The unsupported config is stored as config_backup,"
-            				+ " and the settings have been imported into the new \"config.yml\".");
-            	}
-            	else {
-            		plugin.getLogger().severe("Could not read config version! Please validate config.yml.");
-            		throw new RuntimeException();
-            	}
-            	
-            	int nameCounter = 1;
-        		String backupFileName = "config_backup.yml";
-        		
-        		
-        		File configBackup =  new File(plugin.getDataFolder(), backupFileName);
-        		
-        		//Make sure to not overwrite an existing backup.
-        		while(configBackup.exists()) {
-        			backupFileName = "config_backup_" + Integer.toString(nameCounter) + ".yml";
-        			configBackup =  new File(plugin.getDataFolder(), backupFileName);
-        			nameCounter++;
-        		}
-        		
-        		boolean renamed = configFile.renameTo(configBackup);
-        		if(renamed) {
-        			plugin.saveDefaultConfig();
-        		}
-        		else {
-        			plugin.getLogger().severe("Could not take backup of config. Try renaming it manually and re-run the plugin.");
-        			throw new RuntimeException();
-        		}
-        		
-        		this.configFile = new File(plugin.getDataFolder(), "config.yml");
-        		
-        		File fileToImport = new File(plugin.getDataFolder(), backupFileName);
-        		FileConfiguration configToImport = new YamlConfiguration();;
-        		configToImport.load(fileToImport);
-        		Set<String> importKeys = configToImport.getKeys(true);
-        		Set<String> importKeysNoPath = new HashSet<String>();
-        		
-        		for(String key: importKeys) {
-        			if(key.contains(".")) {
-        				String[] cutKey = key.split("\\.", 100);
-        				int cutKeyLen = cutKey.length;
-        				importKeysNoPath.add(cutKey[cutKeyLen-1]);
-        			}
-        			else {
-        				importKeysNoPath.add(key);
-        			}
-        		}
-
-        		ArrayList<String> newConfigLines = new ArrayList<String>();
-        		
-        		try {
-        			Scanner newConfigScan = new Scanner(configFile);
-        			while (newConfigScan.hasNextLine()) {
-        				newConfigLines.add(newConfigScan.nextLine() + "");
-        			}
-        			newConfigScan.close();
-        		} catch (FileNotFoundException e) {
-        			e.printStackTrace();
-        		}
-        		
-        		ArrayList<String> newLines = new ArrayList<String>();
-        		String configSection = "";
-        		int sectionSpaces = 0;
-        		
-        		String newOptions = "";
-        		
-        		for(String line: newConfigLines) {
-        			String newLine = line;
-        			int spaces = 0;
-        			for(int i = 0; i < line.length(); i++) {//Check number of spaces at the beginning of the line to get configSection
-        				char letter = line.charAt(i);
-        				if(letter == ' ') spaces++;
-        				else break;
-        			}
-        			if(spaces < sectionSpaces) { //If group is done, move to parent section
-        				int levelsToGoUp = (sectionSpaces - spaces)/4;
-        				while(levelsToGoUp > 0) {
-        					int lastDotLocation = configSection.lastIndexOf('.');
-        					if(lastDotLocation == -1) {
-        						configSection = "";
-        						levelsToGoUp = 0;
-        					}
-        					else {
-            					configSection = configSection.substring(0, lastDotLocation);
-            					levelsToGoUp--;
-        					}
-        				}
-        				sectionSpaces = spaces;
-        				
-        			}
-        			else if(spaces > sectionSpaces) {
-        				sectionSpaces = spaces;
-        			}
-        			boolean foundKey = false;
-                    for(String key: importKeysNoPath) {
-                    	if(line.trim().equals(key + ":")) {
-                    		if(configSection.equals("")) configSection += key;
-                    		else configSection += "." + key;
-                    		foundKey = true;
-                    		break;
-                    	}
-                    	else if(line.trim().startsWith(key + ":") && !key.equals("version")) {
-                    		String valueAtKey = configToImport.getString(configSection + "." + key);
-                    		if(!valueAtKey.matches("\\d+") && !valueAtKey.equals("false") && !valueAtKey.equals("true")) {
-                    			valueAtKey = "'" + valueAtKey + "'";
-                    		}
-                    		newLine = line.replace(line.trim(), key + ": " + valueAtKey);
-                    		foundKey = true;
-                    		break;
-                    	}
-                    }
-                    if(!foundKey && !line.trim().startsWith("#") && !newLine.contains("version")) newOptions += newLine.split("\\:")[0].trim() + " ";
-                    newLines.add(newLine);
-                }
-        		
-        		plugin.getLogger().warning("The following options were added to config: " + newOptions.trim());
-        		
-        		FileWriter fw;
-        		String[] linesArray = newLines.toArray(new String[newConfigLines.size()]);
-        		try {
-        			fw = new FileWriter(configFile);
-        			for (int i = 0; i < linesArray.length; i++) {
-        				fw.write(linesArray[i] + "\n");
-        			}
-        			fw.close();
-        		} catch (IOException e) {
-        			e.printStackTrace();
-        		}
-        		
-                plugin.reloadConfig();
-                this.config = plugin.getConfig();
+            	ConfigVersionAdapter cfgVersionAdapter = new ConfigVersionAdapter(plugin, pluginVersion, configVersion);
+            	this.config = cfgVersionAdapter.updateConfig(configFile);
             }
         	this.validateConfig();
         }
@@ -207,30 +62,12 @@ public class ConfigHandler {
         }
     }
 	
-	
-	
-	private int getVersionValue(String versionString) { //versionString = 1.0.1 and similar
-		int versionValue = 0;
-		String[] versionSplitByPunctuations = versionString.split("[\\p{Punct}\\s]+");
-		try {
-			for(int i = 0; i < 3; i++)
-				versionValue += (int) (Math.pow(10, (2-i)*3)) * Integer.parseInt(versionSplitByPunctuations[i]);
-	    	return versionValue;
-		}
-		catch(Exception e) {
-			plugin.getLogger().severe("Something went wrong reading the plugin version from config, has it been manually changed?");
-			throw e;
-		}
-    	
-	}
-	
 	public FileConfiguration getConfig() {
 		return this.config;
 	}
 	
 	
 	private void validateConfig() { //Tests if the config file is readable by the program
-		
 		//---Global settings---//
 		int regenDelaySeconds;
 		int warningDelaySeconds;
