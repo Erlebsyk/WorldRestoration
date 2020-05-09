@@ -25,7 +25,7 @@ public class PerformRegen implements Runnable{
 		
 		Set<String> worldNames = DataStore.getWorldNames();
 		for(String worldName: worldNames) {
-			String worldRegenEnabledProperty = DataStore.getString("world-settings." + worldName + ".regen-enabled").trim();
+			String worldRegenEnabledProperty = DataStore.getString("world-settings." + worldName + ".regen-enabled").trim().toLowerCase();
 			boolean regenEnabledForWorld = worldRegenEnabledProperty.equals("true");
 			if(regenEnabledForWorld) {
 				World world = Bukkit.getWorld(worldName);

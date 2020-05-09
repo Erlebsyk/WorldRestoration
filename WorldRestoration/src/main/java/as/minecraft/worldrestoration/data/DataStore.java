@@ -8,25 +8,35 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import as.minecraft.worldrestoration.WorldRestoration;
 
 public class DataStore {
+	//Static variables accessible from external threads
 	private static Set<String> keys;
 	private static HashMap<String, String> configStrings;
 	private static HashMap<String, Integer> configInts;
 	private static Set<String> worldNames;
 	private static boolean running;
 	
-	public DataStore(WorldRestoration plugin) {
-		DataStore.keys = plugin.getConfig().getKeys(true);
+	//Non-static variables that should never be accessed from external threads
+	private WorldRestoration plugin;
+	
+	public DataStore(WorldRestoration plugin, FileConfiguration config) {
 		DataStore.configStrings = new HashMap<String, String>();
 		DataStore.configInts = new HashMap<String, Integer>();
 		DataStore.worldNames = new HashSet<String>();
 		DataStore.running = false;
+		this.plugin = plugin;
 		
+		storeDataFromConfig(config);
+	}
+	
+	private void storeDataFromConfig(FileConfiguration config) {
+		DataStore.keys = config.getKeys(true);
 		for(String k: keys) {
-			String entry = plugin.getConfig().getString(k);
+			String entry = config.getString(k);
 			//If entry is a valid integer, store it as an integer
 			if(entry.matches("\\d+")) {
 				try {
@@ -34,8 +44,8 @@ public class DataStore {
 					DataStore.configInts.put(k, num);
 				}
 				catch(NumberFormatException e) { //Entry is a positive number but not a valid int
-					Bukkit.getLogger().severe("Input: \"" + entry + "\" in config.yml at setting \"" + k + "\" is not a valid integer. Maximum allowed value is: 2 147 483 647.");
-					plugin.getPluginLoader().disablePlugin(plugin);
+					plugin.getLogger().severe("Input: \"" + entry + "\" in config.yml at setting \"" + k + "\" is not a valid integer. Maximum allowed value is: 2 147 483 647.");
+					throw new RuntimeException();
 				}
 		    } 
 			else{ //Store all non-integers as strings
@@ -47,7 +57,7 @@ public class DataStore {
 		    		if(Bukkit.getWorld(worldName) != null)
 		    			worldNames.add(worldName);
 		    		else
-		    			Bukkit.getLogger().warning("[World Restoration] World with name: \"" + worldName + "\" is not found, and will not be restored!");
+		    			plugin.getLogger().warning("World with name: \"" + worldName + "\" is not found, and will not be restored!");
 		    	}
 		    }
 		}

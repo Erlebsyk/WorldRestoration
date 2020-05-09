@@ -21,18 +21,18 @@ public class CoreProtectHook {
 	}
 	
 	private CoreProtectAPI fetchCoreProtect() {
-	    Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
+	    Plugin coreProtectPlugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
 	    // Check that CoreProtect is loaded
-	    if (plugin == null || !(plugin instanceof CoreProtect)) {
-	    	Bukkit.getLogger().severe("[WorldRestoration] Could not load CoreProtect, make sure that you have the latest version of CoreProtect installed!");
-	    	this.plugin.getPluginLoader().disablePlugin(this.plugin);
+	    if (coreProtectPlugin == null || !(coreProtectPlugin instanceof CoreProtect)) {
+	    	plugin.getLogger().severe("Could not load CoreProtect, make sure that you have the latest version of CoreProtect installed!");
+	    	throw new RuntimeException();
 	    }
 
     	// Check that the API is enabled
-	    CoreProtectAPI CoreProtect = ((CoreProtect) plugin).getAPI();
+	    CoreProtectAPI CoreProtect = ((CoreProtect) coreProtectPlugin).getAPI();
 	    if (CoreProtect.isEnabled() == false) {
 	    	System.err.println("[WorldRestoration] CoreProtect api not enabled!");
-	    	throw new IllegalStateException();
+	    	throw new RuntimeException();
 	    }
 
     	// Check that a compatible version of the API is loaded

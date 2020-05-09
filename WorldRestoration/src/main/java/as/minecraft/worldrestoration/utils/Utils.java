@@ -1,5 +1,6 @@
 package as.minecraft.worldrestoration.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class Utils {
@@ -24,7 +25,7 @@ public class Utils {
 		else if (timeString.contains("day") || timeString.replace(Integer.toString(inputNumber), "").equals("d"))
 			timeInSecondsToReturn *= 60*60*24;
 		else {
-			System.out.println("[Warning]: [WorldRestoration] time tag not recognized for input: \"" + inputTimeString + "\". Assuming \"" + inputNumber + "\" seconds!");
+			Bukkit.getLogger().warning("[WorldRestoration] time tag not recognized for input: \"" + inputTimeString + "\". Assuming \"" + inputNumber + "\" seconds!");
 		}
 		
 		return timeInSecondsToReturn;
