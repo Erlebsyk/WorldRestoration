@@ -11,4 +11,8 @@ public class Point {
 	public Point clone() {
 		return new Point(x, y);
 	}
+	
+	boolean equals(Point other) {
+		return x == other.x && y == other.y;
+	}
 }

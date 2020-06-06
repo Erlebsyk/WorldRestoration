@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class RectangleTestUtils {
-	public static void assertInside(List<Rectangle> rectangles, Rectangle container) {
+	public static void assertInside(Iterable<Rectangle> rectangles, Rectangle container) {
 		for(Rectangle rect : rectangles) {
 			assertTrue(rect.minCoordinate.x >= container.minCoordinate.x);
 			assertTrue(rect.minCoordinate.y >= container.minCoordinate.y);
@@ -17,7 +17,7 @@ public class RectangleTestUtils {
 		}
 	}
 	
-	public static void assertInsideSquares(List<Square> squares, Rectangle container) {
+	public static void assertInsideSquares(Iterable<Square> squares, Rectangle container) {
 		for(Square square : squares) {
 			Rectangle rect = square.toRectangle();
 			assertTrue(rect.minCoordinate.x >= container.minCoordinate.x);
@@ -27,7 +27,7 @@ public class RectangleTestUtils {
 		}
 	}
 	
-	public static void assertNoOverlap(List<Rectangle> rectangles) {
+	public static void assertNoOverlap(Iterable<Rectangle> rectangles) {
 		for(Rectangle firstRect : rectangles) {
 			for (Rectangle secondRect : rectangles) {
 				if(firstRect != secondRect) {
@@ -37,10 +37,20 @@ public class RectangleTestUtils {
 		}
 	}
 	
-	public static void assertNoOverlapSquares(List<Square> squares) {
+	public static void assertNoOverlapSquaresList(List<Square> squares) {
 		for(Square firstSquare : squares) {
 			for (Square secondSquare : squares) {
 				if(firstSquare != secondSquare) {
+					assertNoOverlap(firstSquare.toRectangle(), secondSquare.toRectangle());
+				}
+			}
+		}
+	}
+	
+	public static void assertNoOverlapSquaresIterable(Iterable<Square> squares) {
+		for(Square firstSquare : squares) {
+			for (Square secondSquare : squares) {
+				if(!firstSquare.equals(secondSquare)) {
 					assertNoOverlap(firstSquare.toRectangle(), secondSquare.toRectangle());
 				}
 			}
@@ -73,7 +83,7 @@ public class RectangleTestUtils {
 	
 	public static void assertAreaEquals(
 			Rectangle baseRect,
-			List<Rectangle> subRectangles,
+			Iterable<Rectangle> subRectangles,
 			Optional<Rectangle> overlapRectangle) {
 		int areaSum = 0;
 		for(Rectangle subRectangle : subRectangles) {
@@ -86,7 +96,7 @@ public class RectangleTestUtils {
 	
 	public static void assertAreaEquals(
 			Rectangle baseRect,
-			List<Square> squares) {
+			Iterable<Square> squares) {
 		int areaSum = 0;
 		for(Square subRectangle : squares) {
 			areaSum += subRectangle.area();
@@ -98,8 +108,8 @@ public class RectangleTestUtils {
 
 	public static void assertAreaEquals(
 			Rectangle baseRectangle,
-			List<Rectangle> newRects,
-			List<Rectangle> overlapRegions) {
+			Iterable<Rectangle> newRects,
+			Iterable<Rectangle> overlapRegions) {
 		int areaSum = 0;
 		for (Rectangle rectangle : newRects) {
 			areaSum += rectangle.area();

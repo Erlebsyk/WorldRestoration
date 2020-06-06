@@ -17,4 +17,8 @@ public class Square {
 				new Point(this.minPoint.x, this.minPoint.y),
 				new Point(this.minPoint.x + size, this.minPoint.y + size));
 	}
+	
+	boolean equals(Square other) {
+		return minPoint.equals(other.minPoint) && size == other.size;
+	}
 }

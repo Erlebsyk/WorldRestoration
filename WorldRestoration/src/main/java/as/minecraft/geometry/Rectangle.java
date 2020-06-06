@@ -1,8 +1,11 @@
 package as.minecraft.geometry;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class Rectangle {
 	public Point minCoordinate;
@@ -163,21 +166,15 @@ public class Rectangle {
 		}
 		
 		ArrayList<Square> returnList = new ArrayList<Square>();
-		if(width() == height()) {
-			returnList.add(new Square(minCoordinate, width()));
-		}
-		else if(width() < height()) {
-			returnList.add(new Square(minCoordinate, width()));
-			Point newMinCoord = new Point(minCoordinate.x, minCoordinate.y + width());
-			returnList.addAll(new Rectangle(newMinCoord, maxCoordinate).convertToSquares());
-		}
-		else {
-			returnList.add(new Square(minCoordinate, height()));
-			Point newMinCoord = new Point(minCoordinate.x + height(), minCoordinate.y);
-			returnList.addAll(new Rectangle(newMinCoord, maxCoordinate).convertToSquares());
+		for(Square square : getSquaresIterable()) {
+			returnList.add(square);
 		}
 		
 		return returnList;
+	}
+	
+	public RectangleToSquareConversionIterable getSquaresIterable() {
+		return new RectangleToSquareConversionIterable(this);
 	}
 	
 	public List<Rectangle> subtractRectangles(List<Rectangle> subtractionRectangles) {
@@ -221,5 +218,60 @@ public class Rectangle {
 	public String toGeodrafterString() {
 		return "rectangle(" + minCoordinate.x + "|" + minCoordinate.y +
 				" " + width() + " " + height() + ")";
+	}
+	
+	public class RectangleToSquareConversionIterable implements Iterable<Square> {
+		private Rectangle rectangle;
+		public RectangleToSquareConversionIterable(Rectangle rectangle) {
+			this.rectangle = rectangle;
+		}
+		
+		@Override
+		public RectangleToSquareConversionIterator iterator() {
+			return new RectangleToSquareConversionIterator(rectangle);
+		}
+		
+	}
+	
+	public class RectangleToSquareConversionIterator implements Iterator<Square> {
+		private Optional<Rectangle> currentRectangle;
+		public RectangleToSquareConversionIterator(Rectangle rectangle) {
+			if(rectangle.width() == 0 || rectangle.height() == 0) {
+				currentRectangle = Optional.empty();
+			}
+			else {
+				currentRectangle = Optional.of(new Rectangle(
+						rectangle.minCoordinate.clone(), rectangle.maxCoordinate.clone()));
+			}
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return currentRectangle.isPresent();
+		}
+
+		@Override
+		public Square next() {
+			if(!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			
+			Rectangle rect = currentRectangle.get();
+			if(rect.width() == rect.height()) {
+				Square square = new Square(rect.minCoordinate.clone(), rect.width());
+				currentRectangle = Optional.empty();
+				return square;
+			}
+			else if(rect.width() < rect.height()) {
+				Square square = new Square(rect.minCoordinate.clone(), rect.width());
+				rect.minCoordinate.y += rect.width();
+				return square;
+			}
+			else {
+				Square square = new Square(rect.minCoordinate.clone(), rect.height());
+				rect.minCoordinate.x += rect.height();
+				return square;
+			}
+		}
 	}
 }
