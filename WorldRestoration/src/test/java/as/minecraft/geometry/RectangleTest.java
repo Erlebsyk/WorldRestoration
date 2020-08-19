@@ -4,7 +4,8 @@ import static as.minecraft.geometry.RectangleTestUtils.assertAreaEquals;
 import static as.minecraft.geometry.RectangleTestUtils.assertInside;
 import static as.minecraft.geometry.RectangleTestUtils.assertInsideSquares;
 import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlap;
-import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlapSquares;
+import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlapSquaresList;
+import static as.minecraft.geometry.RectangleTestUtils.assertNoOverlapSquaresIterable;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -621,8 +622,13 @@ public class RectangleTest {
 		List<Square> squares = rectangle.convertToSquares();
 		
 		assertInsideSquares(squares, rectangle);
-		assertNoOverlapSquares(squares);
+		assertNoOverlapSquaresList(squares);
 		assertAreaEquals(rectangle, squares);
+		
+		Iterable<Square> squareIterable = rectangle.getSquaresIterable();
+		assertInsideSquares(squareIterable, rectangle);
+		assertNoOverlapSquaresIterable(squareIterable);
+		assertAreaEquals(rectangle, squareIterable);
 	}
 	
 	@Test

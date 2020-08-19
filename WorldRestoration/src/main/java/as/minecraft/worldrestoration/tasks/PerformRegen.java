@@ -38,8 +38,7 @@ public class PerformRegen implements Runnable{
 				List<Rectangle> rollbackRectangles = worldRectangle.subtractRectangles(claimRectangles);
 				
 				for(Rectangle rectangle: rollbackRectangles) {
-					List<Square> rollbackSquares = rectangle.convertToSquares();
-					for(Square square: rollbackSquares) {
+					for(Square square: rectangle.getSquaresIterable()) {
 						
 						Location squareCentre = new Location(world, (double) (square.minPoint.x) + (double)(square.size)/2.0, 62.0, (double) (square.minPoint.y) + (double)(square.size)/2.0);
 						int squareRadius = (int) (Math.ceil((double)(square.size) / 2.0));
