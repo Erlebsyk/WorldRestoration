@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -43,11 +44,16 @@ public class ConfigHandler {
             //Version tracking. Add new row if the config is changed between versions.
             HashMap<String, String> versionSupportMap = new HashMap<String, String>();
             versionSupportMap.put("1.0", "1.0.1-alpha");
+			//versionSupportMap.put("2.0", "1.0.1-alpha");
+			versionSupportMap.put("1.1", "1.0.1-alpha");
             
             boolean configUpToDate = false;
             for(String version: versionSupportMap.keySet()) {
             	String versionSupports = versionSupportMap.get(version);
-            	if(versionSupports.contains(configVersion) && versionSupports.contains(pluginVersion)) configUpToDate = true;
+            	if(versionSupports.contains(configVersion) && versionSupports.contains(pluginVersion)) {
+					configUpToDate = true;
+					break;
+				}
             }
             
             if(!configUpToDate) {

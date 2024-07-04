@@ -10,15 +10,28 @@ import as.minecraft.worldrestoration.dependencies.CoreProtectHook;
 import as.minecraft.worldrestoration.tasks.RegenTask;
 import as.minecraft.worldrestoration.utils.Utils;
 
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import java.io.File;
 
 public class WorldRestoration extends JavaPlugin{
-	
+
+	public WorldRestoration()
+	{
+		super();
+	}
+
+	protected WorldRestoration(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file)
+	{
+		super(loader, description, dataFolder, file);
+	}
+
 	@Override
 	public void onEnable() {
 		
 		//----Setup-----
 		try {
-			getLogger().info("Loading configuration...");
+			getLogger().info("Loading configurations...");
 			ConfigHandler configHandler = new ConfigHandler(this);
 			FileConfiguration config = configHandler.getConfig();
 			

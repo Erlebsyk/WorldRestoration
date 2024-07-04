@@ -2,13 +2,44 @@ package as.minecraft.worldrestoration.utils;
 
 import static org.junit.Assert.assertEquals;
 
+import as.minecraft.worldrestoration.WorldRestoration;
+
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import org.bukkit.Bukkit;
+
+import be.seeseemelk.mockbukkit.MockBukkit;
+import be.seeseemelk.mockbukkit.ServerMock;
+
+import as.minecraft.worldrestoration.dependencies.CoreProtectHook;
+
 public class UtilsTest {
+
 	@Rule public TestName name = new TestName();
-	
+
+	private ServerMock server;
+	private WorldRestoration plugin;
+
+	private CoreProtectHook Co;
+
+	@Before
+	public void setUp()
+	{
+		server = MockBukkit.mock();
+		plugin = (WorldRestoration) MockBukkit.load(WorldRestoration.class);
+	}
+
+	@After
+	public void tearDown()
+	{
+		Bukkit.getScheduler().cancelTasks(plugin);
+		MockBukkit.unmock();
+	}
+
 	@Test
 	public void secondsAreConvertedToSeconds(){
 		assertEquals(10, Utils.getSecondsFromTimeUnit("10 seconds"));
@@ -91,7 +122,7 @@ public class UtilsTest {
 	@Test
 	public void weirdShortTagsAreConvertedToSeconds(){ //Time tags are not recognized and assumed to be seconds, and warns user
 		System.out.println("4 Warnings expected!");
-		assertEquals(10, Utils.getSecondsFromTimeUnit("10 WEIRD d-@WeIrD"));
+		assertEquals(10, Utils.getSecondsFromTimeUnit("10 WEIRD dWeIrD"));
 		assertEquals(10, Utils.getSecondsFromTimeUnit("10 WEIRD m-@WeIrD"));
 		assertEquals(10, Utils.getSecondsFromTimeUnit("10 WEIRD h-@WeIrD"));
 		assertEquals(10, Utils.getSecondsFromTimeUnit("10 WEIRD s-@WeIrD"));

@@ -1,14 +1,17 @@
 package as.minecraft.worldrestoration.utils;
 
+import net.coreprotect.spigot.SpigotAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-
+import as.minecraft.worldrestoration.WorldRestoration;
 public class Utils {
 	//Translate standard Bukkit "&" color coding to actual colors
 	public static String chat (String s) {
 		return ChatColor.translateAlternateColorCodes('&', s);
 	}
-	
+
+	private static WorldRestoration plugin;
+
 	//translate time units to number
 	public static int getSecondsFromTimeUnit(String inputTimeString) {
 		int inputNumber = Integer.parseInt(inputTimeString.trim().replaceAll("(\\d+).+", "$1"));
@@ -25,6 +28,7 @@ public class Utils {
 		else if (timeString.contains("day") || timeString.replace(Integer.toString(inputNumber), "").equals("d"))
 			timeInSecondsToReturn *= 60*60*24;
 		else {
+			timeInSecondsToReturn = inputNumber;
 			Bukkit.getLogger().warning("[WorldRestoration] time tag not recognized for input: \"" + inputTimeString + "\". Assuming \"" + inputNumber + "\" seconds!");
 		}
 		

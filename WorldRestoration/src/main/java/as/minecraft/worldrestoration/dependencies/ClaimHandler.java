@@ -6,7 +6,8 @@ import java.util.Set;
 
 import org.bukkit.World;
 
-import com.flowpowered.math.vector.Vector3i;
+//import com.flowpowered.math.vector.Vector3i;
+import com.griefdefender.lib.flowpowered.math.vector.Vector3i;
 import com.griefdefender.api.GriefDefender;
 import com.griefdefender.api.claim.Claim;
 import com.griefdefender.api.claim.ClaimManager;

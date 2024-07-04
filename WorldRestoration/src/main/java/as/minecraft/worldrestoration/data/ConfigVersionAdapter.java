@@ -32,22 +32,24 @@ public class ConfigVersionAdapter {
 	public FileConfiguration updateConfig(File configFile) {
 		int configVersionValue = getVersionValue(configVersion);
     	int pluginVersionValue = getVersionValue(pluginVersion);
-    	if(pluginVersionValue > configVersionValue) {
-    		plugin.getLogger().warning("Config file outdated! A copy of the old is saved as \"config_backup.yml\", and a new one is created. "
-    				+ "The old settings will be imported, but make sure to review the new settings and verify that "
-    				+ "the old settings was imported correctly into the new \"config.yml\"!");
-    	}
-    	else if(pluginVersionValue < configVersionValue) {
-    		plugin.getLogger().warning("A config file for a newer version of the plugin was detected,"
-    				+ " if this is a mistake make sure to update the plugin to the latest version!"
-    				+ " The unsupported config is stored as config_backup,"
-    				+ " and the settings have been imported into the new \"config.yml\".");
-    	}
-    	else {
-    		plugin.getLogger().severe("Could not read config version! Please validate config.yml.");
-    		throw new RuntimeException();
-    	}
-    	
+		if(pluginVersionValue != configVersionValue){
+			if(pluginVersionValue > configVersionValue) {
+				plugin.getLogger().warning("Config file outdated! A copy of the old is saved as \"config_backup.yml\", and a new one is created. "
+						+ "The old settings will be imported, but make sure to review the new settings and verify that "
+						+ "the old settings was imported correctly into the new \"config.yml\"!");
+			}
+			else if(pluginVersionValue < configVersionValue) {
+				plugin.getLogger().warning("A config file for a newer version of the plugin was detected,"
+						+ " if this is a mistake make sure to update the plugin to the latest version!"
+						+ " The unsupported config is stored as config_backup,"
+						+ " and the settings have been imported into the new \"config.yml\".");
+			}
+			else {
+				plugin.getLogger().severe("Could not read config version! Please validate config.yml.");
+				throw new RuntimeException();
+			}
+		}
+
     	int nameCounter = 1;
 		String backupFileName = "config_backup.yml";
 		

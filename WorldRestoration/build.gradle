@@ -6,19 +6,50 @@
  * User Manual available at https://docs.gradle.org/5.4/userguide/java_library_plugin.html
  */
 
+buildscript {
+    repositories {
+        maven {
+            url = 'https://plugins.gradle.org/m2/'
+        }
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
+    }
+}
+
 plugins {
     // Apply the java-library plugin to add support for Java Library
-    id 'java-library'
+    id 'java'
+    id 'maven-publish'
 }
-apply plugin: "eclipse"
+
+defaultTasks 'clean', 'build'
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allJava
+}
 
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    
+    mavenLocal()
+    mavenCentral()
     maven {
-        name = 'spigot'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+
+        // As of Gradle 5.1, you can limit this to only those
+        // dependencies you expect from it
+        content {
+            includeGroup 'org.bukkit'
+            includeGroup 'org.spigotmc'
+        }
+    }
+
+    maven
+    {
+        name = 'griefdefender'
+        url = 'https://repo.glaremasters.me/repository/bloodshot'
     }
     maven {
         name = 'coreprotect'
@@ -30,14 +61,14 @@ repositories {
         url = 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     maven {
+        "sonatype_central"
+        url = 'https://oss.sonatype.org/content/repositories/central'
+    }
+    maven {
     	name = 'jitpack'
     	url = 'https://jitpack.io'
     }
-    maven {
-	name = "worldedit-bukkit"
-	url="http://maven.sk89q.com/repo"
-    }
-    
+
     flatDir {
         dirs 'lib'
     }
@@ -55,15 +86,22 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
-    
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.16:1.5.2'
+
+    // https://mvnrepository.com/artifact/com.flowpowered/flow-math
+    compileOnly group: 'com.flowpowered', name: 'flow-math', version: '1.0.3'
+
+
     compileOnly 'org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT'
-    compileOnly 'com.flowpowered:flow-math:1.0.3'
-    compileOnly 'net.coreprotect:coreprotect:2.18.2'
+    compileOnly 'net.coreprotect:coreprotect:22.4'
     
     compileOnly 'com.github.jitpack:gradle-simple:master-SNAPSHOT'
-    compileOnly 'com.github.bloodmc:GriefDefenderAPI:master-SNAPSHOT'
+    compileOnly group: 'com.griefdefender', name: 'api', version: '2.1.0-SNAPSHOT'
+
+    //compileOnly 'org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT' // The Spigot API with no shadowing. Requires the OSS repo.
+    //compileOnly 'org.spigotmc:spigot:1.20.2-R0.1-SNAPSHOT'
+    //compileOnly 'org.spigotmc:spigot-api:1.20.2-R0.1-SNAPSHOT'
 
     //compileOnly fileTree(include: ['*.jar'], dir: 'lib')
-    //implementation 'com.github.bloodmc.GriefDefender:bukkit:master-SNAPSHOT'
     
 }
